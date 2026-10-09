@@ -478,6 +478,7 @@ a { color: inherit; }
 
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; }
+  .hero-faces { grid-template-columns: repeat(2, 1fr); }
   .cards { grid-template-columns: 1fr; }
   .determinism-grid { grid-template-columns: 1fr; }
   .site-nav { display: none; }

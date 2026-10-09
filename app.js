@@ -1,7 +1,7 @@
 import { toSvg } from './vendor/peek-vanilla/index.js';
 
 function face(name, size) {
-  return toSvg(name, { size: size || 256 });
+  return toSvg(name, { size: size || 256, frame: 'paper' });
 }
 
 function mountFaces(el, names, size) {
