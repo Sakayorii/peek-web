@@ -106,14 +106,14 @@
         <h2>Same name. Same face. Everywhere.</h2>
         <p class="section-lede">Each face is computed from the name with FNV-1a and mulberry32. There is no database and no network call, so identity is portable by construction.</p>
         <div class="determinism-grid">
-          <div class="same-faces" id="same-faces" aria-label="The same face in three runtimes"></div>
+          <div class="same-faces" id="same-faces" aria-label="One face per runtime name"></div>
           <ul class="proof-list">
             <li><strong>445 golden vectors.</strong> Curated names with unicode, emoji, and whitespace edge cases, every expression, every part override. One byte off fails.</li>
             <li><strong>1,800 animation poses.</strong> The Kotlin-side animation rig was stepped pose-for-pose against the JavaScript harness. Worst drift: 1.4e-15.</li>
             <li><strong>Zero dependencies.</strong> Every port ships with no runtime dependencies, in every language.</li>
           </ul>
         </div>
-        <p class="fine-print">Faces above are rendered live with peek-vanilla. The Kotlin and Rust ports produce byte-identical SVG for the same input, checked by the golden vectors.</p>
+        <p class="fine-print">Each face above is rendered live from its language name. Same name in, same face out, in every runtime. The Kotlin and Rust ports produce byte-identical SVG for the same input, checked by 445 golden vectors.</p>
       </div>
     </section>
 

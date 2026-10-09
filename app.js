@@ -25,12 +25,12 @@ if (hero) {
   });
 }
 
-/* determinism: one name, three runtimes, identical bytes (static exhibit) */
+/* determinism: one deterministic face per name, rendered live */
 const same = document.getElementById('same-faces');
 if (same) {
   ['JavaScript', 'Kotlin', 'Rust'].forEach((runtime) => {
     const fig = document.createElement('figure');
-    fig.innerHTML = face('Sakayori', 256);
+    fig.innerHTML = face(runtime, 256);
     caption(fig, runtime);
     same.appendChild(fig);
   });
