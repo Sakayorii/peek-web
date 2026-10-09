@@ -78,7 +78,7 @@ function layoutTrack(instant) {
 function fitHeight(instant) {
   if (!panelsWrap || !panels[currentIdx]) return;
   if (instant || reduceMotion) panelsWrap.style.transition = 'none';
-  else panelsWrap.style.transition = 'height 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
+  else panelsWrap.style.transition = 'height 0.65s cubic-bezier(0.22, 1, 0.36, 1)';
   panelsWrap.style.height = `${panels[currentIdx].offsetHeight}px`;
   if (instant || reduceMotion) {
     void panelsWrap.offsetHeight;
@@ -105,7 +105,7 @@ function switchTab(tab) {
   switchTimer = window.setTimeout(() => {
     if (panelsWrap) panelsWrap.style.transition = '';
     panels.forEach((p) => p.classList.remove('is-moving'));
-  }, 540);
+  }, 700);
 }
 
 tabs.forEach((tab) => {

@@ -450,8 +450,8 @@ a { color: inherit; }
 .panels-track {
   display: flex;
   align-items: flex-start;
-  gap: 28px;
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  gap: 40px;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 
