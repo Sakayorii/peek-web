@@ -100,10 +100,14 @@ function switchTab(tab) {
     p.classList.add('is-moving');
   });
   if (switchTimer) { clearTimeout(switchTimer); switchTimer = null; }
+  panelsWrap.classList.add('is-sliding');
   layoutTrack(false);
   fitHeight(false);
   switchTimer = window.setTimeout(() => {
-    if (panelsWrap) panelsWrap.style.transition = '';
+    if (panelsWrap) {
+      panelsWrap.style.transition = '';
+      panelsWrap.classList.remove('is-sliding');
+    }
     panels.forEach((p) => p.classList.remove('is-moving'));
   }, 540);
 }

@@ -450,10 +450,12 @@ a { color: inherit; }
 .panels-track {
   display: flex;
   align-items: flex-start;
-  gap: 28px;
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
+
+/* while sliding, the code blocks merge into one full-bleed strip */
+.panels.is-sliding .panel pre { border-radius: 0; }
 
 .code-head {
   display: flex;
@@ -501,6 +503,7 @@ a { color: inherit; }
   background: var(--ink);
   color: #e8e2d8;
   border-radius: var(--radius);
+  transition: border-radius 0.25s ease;
   padding: 28px;
   overflow-x: auto;
   font-family: var(--mono);
