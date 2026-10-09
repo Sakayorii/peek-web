@@ -59,11 +59,16 @@ function moveIndicator(tab, instant) {
 let currentIdx = 0;
 let switchTimer = null;
 
+function trackStep() {
+  const gap = parseFloat(getComputedStyle(track).gap) || 0;
+  return panelsWrap.clientWidth + gap;
+}
+
 function layoutTrack(instant) {
   if (!track || !panelsWrap) return;
   if (instant || reduceMotion) track.style.transition = 'none';
   else track.style.transition = '';
-  track.style.transform = `translateX(${-currentIdx * panelsWrap.clientWidth}px)`;
+  track.style.transform = `translateX(${-currentIdx * trackStep()}px)`;
   if (instant || reduceMotion) {
     void track.offsetWidth;
     track.style.transition = '';
