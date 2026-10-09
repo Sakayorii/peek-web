@@ -483,6 +483,12 @@ a { color: inherit; }
 .panel {
   flex: 0 0 100%;
   min-width: 0;
+  visibility: hidden;
+}
+
+.panel.is-active,
+.panel.is-moving {
+  visibility: visible;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -95,12 +95,16 @@ function switchTab(tab) {
   moveIndicator(tab, false);
   if (idx < 0 || idx === currentIdx) return;
   currentIdx = idx;
-  panels.forEach((p, i) => p.classList.toggle('is-active', i === idx));
+  panels.forEach((p, i) => {
+    p.classList.toggle('is-active', i === idx);
+    p.classList.add('is-moving');
+  });
   if (switchTimer) { clearTimeout(switchTimer); switchTimer = null; }
   layoutTrack(false);
   fitHeight(false);
   switchTimer = window.setTimeout(() => {
     if (panelsWrap) panelsWrap.style.transition = '';
+    panels.forEach((p) => p.classList.remove('is-moving'));
   }, 540);
 }
 
