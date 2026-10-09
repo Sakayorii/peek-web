@@ -36,20 +36,84 @@ if (same) {
   });
 }
 
-/* tabs */
+/* tabs: sliding indicator + morphing panels */
 const tabs = Array.from(document.querySelectorAll('.tab'));
 const panels = Array.from(document.querySelectorAll('.panel'));
-tabs.forEach((tab) => {
-  tab.addEventListener('click', () => {
-    tabs.forEach((t) => {
-      t.classList.toggle('is-active', t === tab);
-      t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
-    });
-    panels.forEach((p) => {
-      p.classList.toggle('is-active', p.dataset.panel === tab.dataset.tab);
-    });
+const panelsWrap = document.querySelector('.panels');
+const indicator = document.querySelector('.tab-indicator');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function moveIndicator(tab, instant) {
+  if (!indicator || !tab) return;
+  if (instant || reduceMotion) indicator.style.transition = 'none';
+  else indicator.style.transition = '';
+  indicator.style.transform = `translateX(${tab.offsetLeft}px)`;
+  indicator.style.width = `${tab.offsetWidth}px`;
+  if (instant || reduceMotion) {
+    void indicator.offsetWidth;
+    indicator.style.transition = '';
+  }
+}
+
+let switchTimer = null;
+function settlePanels() {
+  if (switchTimer) { clearTimeout(switchTimer); switchTimer = null; }
+  panels.forEach((p) => p.classList.remove('is-leaving', 'is-measuring'));
+  if (panelsWrap) {
+    panelsWrap.style.height = '';
+    panelsWrap.style.overflow = '';
+    panelsWrap.style.transition = '';
+  }
+}
+
+function switchTab(tab) {
+  const name = tab.dataset.tab;
+  const current = document.querySelector('.panel.is-active');
+  const next = document.querySelector(`.panel[data-panel="${name}"]`);
+
+  tabs.forEach((t) => {
+    t.classList.toggle('is-active', t === tab);
+    t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
   });
+  moveIndicator(tab, false);
+
+  if (!next || current === next) return;
+
+  if (reduceMotion || !panelsWrap) {
+    panels.forEach((p) => p.classList.toggle('is-active', p === next));
+    return;
+  }
+
+  settlePanels();
+  const startH = panelsWrap.offsetHeight;
+
+  next.classList.add('is-measuring');
+  const endH = next.offsetHeight;
+  next.classList.remove('is-measuring');
+
+  if (current) {
+    current.classList.remove('is-active');
+    current.classList.add('is-leaving');
+  }
+  next.classList.add('is-active');
+
+  panelsWrap.style.height = `${startH}px`;
+  panelsWrap.style.overflow = 'hidden';
+  void panelsWrap.offsetHeight;
+  panelsWrap.style.transition = 'height 0.38s cubic-bezier(0.22, 1, 0.36, 1)';
+  panelsWrap.style.height = `${endH}px`;
+
+  switchTimer = window.setTimeout(settlePanels, 420);
+}
+
+tabs.forEach((tab) => {
+  tab.addEventListener('click', () => switchTab(tab));
 });
+moveIndicator(document.querySelector('.tab.is-active'), true);
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => moveIndicator(document.querySelector('.tab.is-active'), true));
+}
+window.addEventListener('resize', () => moveIndicator(document.querySelector('.tab.is-active'), true));
 
 /* no long-press menu anywhere: pairs with the CSS user-select:none */
 document.addEventListener('contextmenu', (e) => e.preventDefault());
