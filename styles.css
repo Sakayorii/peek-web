@@ -476,12 +476,18 @@ a { color: inherit; }
 
 .panel.is-active {
   display: block;
-  animation: panel-in 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 1;
+  animation: panel-in 0.36s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .panel.is-leaving {
   display: block;
-  animation: panel-out 0.2s ease-in forwards;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  animation: panel-out 0.22s cubic-bezier(0.5, 0, 0.75, 0) forwards;
 }
 
 .panel.is-measuring {
@@ -495,12 +501,13 @@ a { color: inherit; }
 }
 
 @keyframes panel-in {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateX(calc(44px * var(--dir, 1))); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes panel-out {
-  to { opacity: 0; transform: translateY(-10px); }
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(calc(-44px * var(--dir, 1))); }
 }
 
 @media (prefers-reduced-motion: reduce) {

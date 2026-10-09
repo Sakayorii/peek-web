@@ -85,6 +85,14 @@ function switchTab(tab) {
   }
 
   settlePanels();
+
+  /* slide direction follows the tab order, like a pager */
+  const order = tabs.map((t) => t.dataset.tab);
+  const fromIdx = current ? order.indexOf(current.dataset.panel) : -1;
+  const toIdx = order.indexOf(name);
+  const dir = toIdx > fromIdx ? 1 : -1;
+  panelsWrap.style.setProperty('--dir', dir);
+
   const startH = panelsWrap.offsetHeight;
 
   next.classList.add('is-measuring');
