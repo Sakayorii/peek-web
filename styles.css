@@ -455,15 +455,6 @@ a { color: inherit; }
   will-change: transform;
 }
 
-/* the panel being left behind dissolves as it slides away */
-.panels.is-sliding .panel.is-exiting {
-  animation: panel-exit 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-@keyframes panel-exit {
-  to { opacity: 0; transform: scale(0.96); }
-}
-
 .code-head {
   display: flex;
   align-items: center;
@@ -503,7 +494,6 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .tab-indicator { transition: none; }
   .panels-track { transition: none; }
-  .panels.is-sliding .panel.is-exiting { animation: none; }
 }
 
 .panel pre {
