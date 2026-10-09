@@ -17,7 +17,7 @@ if (brand) brand.innerHTML = face('Peek', 96);
 /* hero: live faces that watch the pointer */
 const hero = document.getElementById('hero-faces');
 if (hero) {
-  ['Sakayori', 'Chi', 'Kwame', 'Sofia', 'Mateo', 'Aiko'].forEach((name) => {
+  ['Sakayori', 'Chi', 'Nam', 'Lâm', 'Peka', 'Onyxx'].forEach((name) => {
     const fig = document.createElement('figure');
     hero.appendChild(fig);
     mount(name, fig, { animate: true, gaze: 'pointer', size: 256, frame: 'paper' });
