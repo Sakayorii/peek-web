@@ -1,31 +1,37 @@
-import { toSvg } from './vendor/peek-vanilla/index.js';
+import { toSvg, mount } from './vendor/peek-vanilla/index.js';
 
 function face(name, size) {
   return toSvg(name, { size: size || 256, frame: 'paper' });
 }
 
-function mountFaces(el, names, size) {
-  names.forEach((name) => {
-    const fig = document.createElement('figure');
-    fig.innerHTML = face(name, size) + '<figcaption>' + name + '</figcaption>';
-    el.appendChild(fig);
-  });
+function caption(fig, text) {
+  const cap = document.createElement('figcaption');
+  cap.textContent = text;
+  fig.appendChild(cap);
 }
 
-/* brand mark */
+/* brand mark: static */
 const brand = document.getElementById('brand-face');
 if (brand) brand.innerHTML = face('Peek', 96);
 
-/* hero illustration: a small set of faces, static */
+/* hero: live faces that watch the pointer */
 const hero = document.getElementById('hero-faces');
-if (hero) mountFaces(hero, ['Sakayori', 'Linh', 'Kwame', 'Sofia', 'Mateo', 'Aiko'], 256);
+if (hero) {
+  ['Sakayori', 'Linh', 'Kwame', 'Sofia', 'Mateo', 'Aiko'].forEach((name) => {
+    const fig = document.createElement('figure');
+    hero.appendChild(fig);
+    mount(name, fig, { animate: true, gaze: 'pointer', size: 256, frame: 'paper' });
+    caption(fig, name);
+  });
+}
 
-/* determinism: one name, three runtimes, identical bytes */
+/* determinism: one name, three runtimes, identical bytes (static exhibit) */
 const same = document.getElementById('same-faces');
 if (same) {
   ['JavaScript', 'Kotlin', 'Rust'].forEach((runtime) => {
     const fig = document.createElement('figure');
-    fig.innerHTML = face('Sakayori', 256) + '<figcaption>' + runtime + '</figcaption>';
+    fig.innerHTML = face('Sakayori', 256);
+    caption(fig, runtime);
     same.appendChild(fig);
   });
 }
