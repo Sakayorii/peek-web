@@ -25,21 +25,22 @@ if (hero) {
   });
 }
 
-/* determinism: one deterministic face per name, rendered live */
+/* determinism: one deterministic face per name, animated like the hero */
 const same = document.getElementById('same-faces');
 if (same) {
   ['JavaScript', 'Kotlin', 'Rust'].forEach((runtime) => {
     const fig = document.createElement('figure');
-    fig.innerHTML = face(runtime, 256);
-    caption(fig, runtime);
     same.appendChild(fig);
+    mount(runtime, fig, { animate: true, gaze: 'pointer', size: 256, frame: 'paper' });
+    caption(fig, runtime);
   });
 }
 
-/* tabs: sliding indicator + morphing panels */
+/* tabs: sliding indicator + pager track */
 const tabs = Array.from(document.querySelectorAll('.tab'));
 const panels = Array.from(document.querySelectorAll('.panel'));
 const panelsWrap = document.querySelector('.panels');
+const track = document.querySelector('.panels-track');
 const indicator = document.querySelector('.tab-indicator');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -55,73 +56,63 @@ function moveIndicator(tab, instant) {
   }
 }
 
+let currentIdx = 0;
 let switchTimer = null;
-function settlePanels() {
-  if (switchTimer) { clearTimeout(switchTimer); switchTimer = null; }
-  panels.forEach((p) => p.classList.remove('is-leaving', 'is-measuring'));
-  if (panelsWrap) {
-    panelsWrap.style.height = '';
-    panelsWrap.style.overflow = '';
+
+function layoutTrack(instant) {
+  if (!track || !panelsWrap) return;
+  if (instant || reduceMotion) track.style.transition = 'none';
+  else track.style.transition = '';
+  track.style.transform = `translateX(${-currentIdx * panelsWrap.clientWidth}px)`;
+  if (instant || reduceMotion) {
+    void track.offsetWidth;
+    track.style.transition = '';
+  }
+}
+
+function fitHeight(instant) {
+  if (!panelsWrap || !panels[currentIdx]) return;
+  if (instant || reduceMotion) panelsWrap.style.transition = 'none';
+  else panelsWrap.style.transition = 'height 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
+  panelsWrap.style.height = `${panels[currentIdx].offsetHeight}px`;
+  if (instant || reduceMotion) {
+    void panelsWrap.offsetHeight;
     panelsWrap.style.transition = '';
   }
 }
 
 function switchTab(tab) {
-  const name = tab.dataset.tab;
-  const current = document.querySelector('.panel.is-active');
-  const next = document.querySelector(`.panel[data-panel="${name}"]`);
-
+  const idx = tabs.indexOf(tab);
   tabs.forEach((t) => {
     t.classList.toggle('is-active', t === tab);
     t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
   });
   moveIndicator(tab, false);
-
-  if (!next || current === next) return;
-
-  if (reduceMotion || !panelsWrap) {
-    panels.forEach((p) => p.classList.toggle('is-active', p === next));
-    return;
-  }
-
-  settlePanels();
-
-  /* slide direction follows the tab order, like a pager */
-  const order = tabs.map((t) => t.dataset.tab);
-  const fromIdx = current ? order.indexOf(current.dataset.panel) : -1;
-  const toIdx = order.indexOf(name);
-  const dir = toIdx > fromIdx ? 1 : -1;
-  panelsWrap.style.setProperty('--dir', dir);
-
-  const startH = panelsWrap.offsetHeight;
-
-  next.classList.add('is-measuring');
-  const endH = next.offsetHeight;
-  next.classList.remove('is-measuring');
-
-  if (current) {
-    current.classList.remove('is-active');
-    current.classList.add('is-leaving');
-  }
-  next.classList.add('is-active');
-
-  panelsWrap.style.height = `${startH}px`;
-  panelsWrap.style.overflow = 'hidden';
-  void panelsWrap.offsetHeight;
-  panelsWrap.style.transition = 'height 0.38s cubic-bezier(0.22, 1, 0.36, 1)';
-  panelsWrap.style.height = `${endH}px`;
-
-  switchTimer = window.setTimeout(settlePanels, 420);
+  if (idx < 0 || idx === currentIdx) return;
+  currentIdx = idx;
+  panels.forEach((p, i) => p.classList.toggle('is-active', i === idx));
+  if (switchTimer) { clearTimeout(switchTimer); switchTimer = null; }
+  layoutTrack(false);
+  fitHeight(false);
+  switchTimer = window.setTimeout(() => {
+    if (panelsWrap) panelsWrap.style.transition = '';
+  }, 540);
 }
 
 tabs.forEach((tab) => {
   tab.addEventListener('click', () => switchTab(tab));
 });
-moveIndicator(document.querySelector('.tab.is-active'), true);
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(() => moveIndicator(document.querySelector('.tab.is-active'), true));
+
+function layoutAll(instant) {
+  moveIndicator(document.querySelector('.tab.is-active'), instant);
+  layoutTrack(instant);
+  fitHeight(instant);
 }
-window.addEventListener('resize', () => moveIndicator(document.querySelector('.tab.is-active'), true));
+layoutAll(true);
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => layoutAll(true));
+}
+window.addEventListener('resize', () => layoutAll(true));
 
 /* no long-press menu anywhere: pairs with the CSS user-select:none */
 document.addEventListener('contextmenu', (e) => e.preventDefault());

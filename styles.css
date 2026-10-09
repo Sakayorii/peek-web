@@ -445,7 +445,14 @@ a { color: inherit; }
 
 .tab.is-active { color: var(--ink); }
 
-.panels { position: relative; }
+.panels { position: relative; overflow: hidden; }
+
+.panels-track {
+  display: flex;
+  align-items: flex-start;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
 
 .code-head {
   display: flex;
@@ -472,47 +479,14 @@ a { color: inherit; }
 
 .copy-light:hover { background: #e7e2d6; border-color: var(--muted); }
 
-.panel { display: none; }
-
-.panel.is-active {
-  display: block;
-  position: relative;
-  z-index: 1;
-  animation: panel-in 0.36s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.panel.is-leaving {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  animation: panel-out 0.22s cubic-bezier(0.5, 0, 0.75, 0) forwards;
-}
-
-.panel.is-measuring {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-@keyframes panel-in {
-  from { opacity: 0; transform: translateX(calc(44px * var(--dir, 1))); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes panel-out {
-  from { opacity: 1; transform: translateX(0); }
-  to { opacity: 0; transform: translateX(calc(-44px * var(--dir, 1))); }
+.panel {
+  flex: 0 0 100%;
+  min-width: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .tab-indicator { transition: none; }
-  .panel.is-active, .panel.is-leaving { animation: none; }
+  .panels-track { transition: none; }
 }
 
 .panel pre {
