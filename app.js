@@ -51,6 +51,9 @@ tabs.forEach((tab) => {
   });
 });
 
+/* no long-press menu anywhere: pairs with the CSS user-select:none */
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
 /* copy buttons */
 document.querySelectorAll('.copy[data-copy]').forEach((btn) => {
   btn.addEventListener('click', async () => {
