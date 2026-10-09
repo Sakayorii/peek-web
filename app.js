@@ -52,10 +52,26 @@ tabs.forEach((tab) => {
 });
 
 /* copy buttons */
-document.querySelectorAll('.copy').forEach((btn) => {
+document.querySelectorAll('.copy[data-copy]').forEach((btn) => {
   btn.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(btn.dataset.copy);
+      const old = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = old; }, 1400);
+    } catch (e) {
+      btn.textContent = 'Copy failed';
+    }
+  });
+});
+
+/* copy code snippets */
+document.querySelectorAll('[data-codecopy]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const pre = btn.closest('.panel').querySelector('pre');
+    if (!pre) return;
+    try {
+      await navigator.clipboard.writeText(pre.innerText);
       const old = btn.textContent;
       btn.textContent = 'Copied';
       setTimeout(() => { btn.textContent = old; }, 1400);
