@@ -121,7 +121,39 @@ layoutAll(true);
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(() => layoutAll(true));
 }
-window.addEventListener('resize', () => layoutAll(true));
+/* Mobile browsers fire `resize` when the URL bar shows/hides on scroll
+   (height-only). Relaying out then makes the tab indicator and panel
+   height jump mid-scroll — only a real width change needs a relayout. */
+let lastViewportWidth = window.innerWidth;
+window.addEventListener('resize', () => {
+  if (window.innerWidth === lastViewportWidth) return;
+  lastViewportWidth = window.innerWidth;
+  layoutAll(true);
+});
+
+/* Swipe between code panels, like a native pager. A swipe that starts
+   inside a <pre> is left alone so the code itself can scroll sideways. */
+if (panelsWrap) {
+  let swipeX = null;
+  let swipeY = null;
+  panelsWrap.addEventListener('touchstart', (e) => {
+    if (e.target.closest('pre')) { swipeX = null; return; }
+    const t = e.changedTouches[0];
+    swipeX = t.clientX;
+    swipeY = t.clientY;
+  }, { passive: true });
+  panelsWrap.addEventListener('touchend', (e) => {
+    if (swipeX === null) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - swipeX;
+    const dy = t.clientY - swipeY;
+    swipeX = null;
+    swipeY = null;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const next = currentIdx + (dx < 0 ? 1 : -1);
+    if (next >= 0 && next < tabs.length) switchTab(tabs[next]);
+  }, { passive: true });
+}
 
 /* no long-press menu anywhere: pairs with the CSS user-select:none */
 document.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -133,17 +165,37 @@ document.addEventListener('selectionchange', () => {
   if (s && s.rangeCount > 0) s.removeAllRanges();
 });
 
+/* copy: Clipboard API first; in-app WebViews (Messenger/Zalo browsers)
+   often deny it, so fall back to a throwaway textarea + execCommand. */
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (e) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+}
+
+function copyFeedback(btn, ok) {
+  const old = btn.textContent;
+  btn.textContent = ok ? 'Copied' : 'Copy failed';
+  setTimeout(() => { btn.textContent = old; }, 1400);
+}
+
 /* copy buttons */
 document.querySelectorAll('.copy[data-copy]').forEach((btn) => {
   btn.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(btn.dataset.copy);
-      const old = btn.textContent;
-      btn.textContent = 'Copied';
-      setTimeout(() => { btn.textContent = old; }, 1400);
-    } catch (e) {
-      btn.textContent = 'Copy failed';
-    }
+    copyFeedback(btn, await copyText(btn.dataset.copy));
   });
 });
 
@@ -152,13 +204,6 @@ document.querySelectorAll('[data-codecopy]').forEach((btn) => {
   btn.addEventListener('click', async () => {
     const pre = btn.closest('.panel').querySelector('pre');
     if (!pre) return;
-    try {
-      await navigator.clipboard.writeText(pre.innerText);
-      const old = btn.textContent;
-      btn.textContent = 'Copied';
-      setTimeout(() => { btn.textContent = old; }, 1400);
-    } catch (e) {
-      btn.textContent = 'Copy failed';
-    }
+    copyFeedback(btn, await copyText(pre.innerText));
   });
 });

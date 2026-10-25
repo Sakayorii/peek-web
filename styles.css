@@ -13,6 +13,8 @@
   --sans: "Inter Tight", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius: 14px;
+  /* Light-only design: stop Android browsers from force-darkening it. */
+  color-scheme: only light;
 }
 
 * { box-sizing: border-box; }
@@ -20,6 +22,9 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* `clip`, not `hidden`: kills horizontal scroll without breaking
+     position: sticky on the header. */
+  overflow-x: clip;
 }
 
 *,
@@ -41,9 +46,16 @@ body {
   font-size: 16.5px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 
+img, svg, video { max-width: 100%; }
+
+/* No double-tap-zoom delay on anything tappable: feels native. */
+a, button { touch-action: manipulation; }
+
 .wrap {
+  width: 100%;
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 24px;
@@ -69,6 +81,7 @@ a { color: inherit; }
   position: sticky;
   top: 0;
   z-index: 50;
+  padding-top: env(safe-area-inset-top, 0px);
   background: rgba(250, 248, 245, 0.88);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -88,7 +101,10 @@ a { color: inherit; }
   gap: 10px;
   text-decoration: none;
   margin-right: auto;
+  min-width: 0;
 }
+
+.brand-name, .brand-sub { white-space: nowrap; }
 
 .brand-mark {
   width: 30px;
@@ -140,10 +156,12 @@ a { color: inherit; }
 
 .hero-inner {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: 56px;
   align-items: center;
 }
+
+.hero-copy { min-width: 0; }
 
 .eyebrow {
   font-family: var(--mono);
@@ -184,7 +202,8 @@ a { color: inherit; }
 
 .hero-stats {
   display: flex;
-  gap: 36px;
+  flex-wrap: wrap;
+  gap: 20px 36px;
   margin: 0;
   padding-top: 28px;
   border-top: 1px solid var(--line-soft);
@@ -206,12 +225,14 @@ a { color: inherit; }
 
 .hero-faces {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+  min-width: 0;
 }
 
 .hero-faces figure {
   margin: 0;
+  min-width: 0;
   background: var(--card);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
@@ -264,7 +285,7 @@ a { color: inherit; }
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -276,6 +297,10 @@ a { color: inherit; }
   display: flex;
   flex-direction: column;
   gap: 14px;
+  /* Grid/flex items default to min-width:auto and refuse to shrink below
+     their content — one long install string then pushes the whole card
+     (and the page) wider than the phone screen. */
+  min-width: 0;
 }
 
 .card-top {
@@ -283,7 +308,10 @@ a { color: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-width: 0;
 }
+
+.card-top h3 { min-width: 0; overflow-wrap: anywhere; }
 
 .card-top h3 { margin: 0; font-family: var(--mono); font-size: 1.02rem; }
 
@@ -309,6 +337,7 @@ a { color: inherit; }
   border-radius: 10px;
   padding: 10px 8px 10px 14px;
   margin-top: auto;
+  min-width: 0;
 }
 
 .install code {
@@ -319,6 +348,9 @@ a { color: inherit; }
   overflow: hidden;
   text-overflow: ellipsis;
   flex: 1;
+  /* Without this the ellipsis never engages: the flex item grows past
+     the card instead of truncating (the clipped Copy button bug). */
+  min-width: 0;
 }
 
 .copy {
@@ -352,19 +384,21 @@ a { color: inherit; }
 
 .determinism-grid {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: 48px;
   align-items: center;
 }
 
 .same-faces {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+  min-width: 0;
 }
 
 .same-faces figure {
   margin: 0;
+  min-width: 0;
   background: var(--card);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
@@ -411,6 +445,7 @@ a { color: inherit; }
   padding: 4px;
   margin-bottom: 20px;
   position: relative;
+  max-width: 100%;
 }
 
 .tab-indicator {
@@ -459,7 +494,9 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 10px;
+  min-width: 0;
 }
 
 .panel-repo {
@@ -468,6 +505,10 @@ a { color: inherit; }
   font-weight: 500;
   color: var(--muted);
   text-decoration: none;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .panel-repo:hover { color: var(--ink); }
@@ -503,6 +544,8 @@ a { color: inherit; }
   border-radius: var(--radius);
   padding: 28px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
   font-family: var(--mono);
   font-size: 0.88rem;
   line-height: 1.7;
@@ -538,7 +581,10 @@ a { color: inherit; }
 
 /* ---------- footer ---------- */
 
-.site-footer { border-top: 1px solid var(--line-soft); padding: 32px 0; }
+.site-footer {
+  border-top: 1px solid var(--line-soft);
+  padding: 32px 0 calc(32px + env(safe-area-inset-bottom, 0px));
+}
 
 .footer-inner {
   display: flex;
@@ -558,11 +604,104 @@ a { color: inherit; }
 /* ---------- responsive ---------- */
 
 @media (max-width: 900px) {
-  .hero-inner { grid-template-columns: 1fr; }
-  .hero-faces { grid-template-columns: repeat(2, 1fr); }
-  .cards { grid-template-columns: 1fr; }
-  .determinism-grid { grid-template-columns: 1fr; }
+  .hero { padding: 56px 0 52px; }
+  .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .hero-faces { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .determinism-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .site-nav { display: none; }
+  .section { padding: 56px 0; }
+}
+
+/* ---------- phones: native-feel pass ---------- */
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+
+  .wrap {
+    padding-left: max(18px, env(safe-area-inset-left, 0px));
+    padding-right: max(18px, env(safe-area-inset-right, 0px));
+  }
+
+  /* header: shorter bar, brand keeps its face + name only */
+  .header-inner { height: 56px; gap: 12px; }
+  .brand-sub { display: none; }
+  .github-link { min-height: 40px; padding: 8px 13px; }
+
+  .hero { padding: 40px 0 44px; }
+  h1 { font-size: clamp(2.05rem, 9.6vw, 2.7rem); }
+  h2 { font-size: clamp(1.55rem, 6.4vw, 2rem); }
+  .eyebrow { margin-bottom: 14px; }
+  .lede { font-size: 1.04rem; }
+
+  /* actions: two full-height thumb targets side by side */
+  .hero-actions { flex-wrap: nowrap; margin: 24px 0 32px; }
+  .hero-actions .btn {
+    flex: 1 1 0;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px 8px;
+    font-size: 0.92rem;
+  }
+
+  /* stats: 2×2 grid instead of a squeezed 4-across row */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 24px;
+    padding-top: 22px;
+  }
+  .hero-stats dt { font-size: 1.45rem; }
+
+  .hero-faces { gap: 10px; }
+  .hero-faces figure { padding: 10px; }
+
+  .section { padding: 48px 0; }
+  .section-lede { font-size: 1.02rem; margin-bottom: 30px; }
+
+  .card { padding: 22px 18px; border-radius: 16px; }
+
+  /* install bar: Copy becomes a real tap target, code truncates first */
+  .install { padding: 8px 6px 8px 12px; }
+  .install code { font-size: 0.72rem; }
+  .copy {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+  }
+  .card-link { padding: 6px 0; }
+
+  .same-faces { gap: 8px; }
+  .same-faces figure { padding: 6px; }
+  .same-faces figcaption { font-size: 0.66rem; overflow-wrap: anywhere; }
+
+  .proof-list li { font-size: 0.96rem; }
+
+  /* tabs: full-width segmented control, 44px targets; the sliding
+     indicator is positioned from offsetLeft/offsetWidth so it tracks. */
+  .tabs { display: flex; width: 100%; }
+  .tab { flex: 1 1 0; min-height: 44px; padding: 10px 4px; }
+
+  .panel pre { padding: 18px 16px; font-size: 0.8rem; line-height: 1.65; border-radius: 12px; }
+  .copy-light { flex: none; }
+
+  .section-credit .btn { min-height: 48px; display: inline-flex; align-items: center; }
+
+  .footer-inner { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .footer-links a { padding: 6px 0; }
+}
+
+@media (max-width: 380px) {
+  /* very small phones: GitHub becomes icon-only so the brand never clips */
+  .github-link span { display: none; }
+  .github-link { padding: 8px 10px; }
+  .tab { font-size: 0.76rem; }
+  .panel pre { padding: 16px 14px; font-size: 0.76rem; }
+  .hero-actions .btn { font-size: 0.88rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
