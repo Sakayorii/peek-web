@@ -1,4 +1,4 @@
-import { toSvg, mount } from './vendor/peek-vanilla/index.js';
+import { toSvg, mount, EXPRESSIONS, ACCESSORIES, VARIANTS } from './vendor/peek-vanilla/index.js';
 
 function face(name, size) {
   return toSvg(name, { size: size || 256, frame: 'paper' });
@@ -123,7 +123,7 @@ if (document.fonts && document.fonts.ready) {
 }
 /* Mobile browsers fire `resize` when the URL bar shows/hides on scroll
    (height-only). Relaying out then makes the tab indicator and panel
-   height jump mid-scroll — only a real width change needs a relayout. */
+   height jump mid-scroll, only a real width change needs a relayout. */
 let lastViewportWidth = window.innerWidth;
 window.addEventListener('resize', () => {
   if (window.innerWidth === lastViewportWidth) return;
@@ -155,12 +155,19 @@ if (panelsWrap) {
   }, { passive: true });
 }
 
-/* no long-press menu anywhere: pairs with the CSS user-select:none */
-document.addEventListener('contextmenu', (e) => e.preventDefault());
+/* no long-press menu anywhere: pairs with the CSS user-select:none.
+   Form controls (the playground name field) are exempt, or the visitor
+   could not edit, select, or paste into them. */
+function inControl(e) {
+  return !!(e.target && e.target.closest && e.target.closest('input, select, textarea'));
+}
+document.addEventListener('contextmenu', (e) => { if (!inControl(e)) e.preventDefault(); });
 
 /* hard block on text selection at the event level, no matter what CSS does */
-document.addEventListener('selectstart', (e) => e.preventDefault());
+document.addEventListener('selectstart', (e) => { if (!inControl(e)) e.preventDefault(); });
 document.addEventListener('selectionchange', () => {
+  const active = document.activeElement;
+  if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
   const s = document.getSelection();
   if (s && s.rangeCount > 0) s.removeAllRanges();
 });
@@ -207,3 +214,115 @@ document.querySelectorAll('[data-codecopy]').forEach((btn) => {
     copyFeedback(btn, await copyText(pre.innerText));
   });
 });
+
+/* playground: one name, three drawing styles, a wardrobe.
+   Options are filled from the vendored tables, so the controls can never
+   drift from what the engine on this page actually supports. Rendering is
+   a synchronous string build, well under a frame, so there is no async
+   gap to cover with a loading state; changes cross-fade instead. */
+const pgName = document.getElementById('pg-name');
+if (pgName) {
+  const pg = {
+    variant: 'peek',
+    expression: 'normal',
+    eyewear: 'none',
+    headwear: 'none',
+    neckwear: 'none',
+  };
+  const faces = {};
+  document.querySelectorAll('[data-variant-face]').forEach((el) => {
+    faces[el.dataset.variantFace] = el;
+  });
+  const cards = Array.from(document.querySelectorAll('.variant-card'));
+  const pgCode = document.getElementById('pg-code');
+  const pgCopy = document.getElementById('pg-copy');
+  let snippet = '';
+
+  function fillSelect(id, values) {
+    const sel = document.getElementById(id);
+    values.forEach((v) => {
+      const opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v;
+      sel.appendChild(opt);
+    });
+    return sel;
+  }
+  const pgExpression = fillSelect('pg-expression', Object.keys(EXPRESSIONS));
+  const pgEyewear = fillSelect('pg-eyewear', ACCESSORIES.eyewear);
+  const pgHeadwear = fillSelect('pg-headwear', ACCESSORIES.headwear);
+  const pgNeckwear = fillSelect('pg-neckwear', ACCESSORIES.neckwear);
+  pgExpression.value = pg.expression;
+
+  function currentName() {
+    const n = pgName.value.trim();
+    return n === '' ? 'Peek' : n;
+  }
+
+  function buildSnippet(name) {
+    const opts = [];
+    if (pg.variant !== 'peek') opts.push(`variant: '${pg.variant}'`);
+    if (pg.expression !== 'normal') opts.push(`expression: '${pg.expression}'`);
+    if (pg.eyewear !== 'none') opts.push(`eyewear: '${pg.eyewear}'`);
+    if (pg.headwear !== 'none') opts.push(`headwear: '${pg.headwear}'`);
+    if (pg.neckwear !== 'none') opts.push(`neckwear: '${pg.neckwear}'`);
+    const safe = name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return opts.length === 0
+      ? `toSvg('${safe}')`
+      : `toSvg('${safe}', { ${opts.join(', ')} })`;
+  }
+
+  function renderPlayground(animate) {
+    const name = currentName();
+    VARIANTS.forEach((v) => {
+      const el = faces[v];
+      if (!el) return;
+      el.innerHTML = toSvg(name, {
+        size: 256,
+        frame: 'paper',
+        variant: v,
+        expression: pg.expression,
+        eyewear: pg.eyewear,
+        headwear: pg.headwear,
+        neckwear: pg.neckwear,
+      });
+    });
+    cards.forEach((card) => {
+      const featured = card.dataset.variant === pg.variant;
+      card.classList.toggle('is-featured', featured);
+      card.setAttribute('aria-pressed', featured ? 'true' : 'false');
+    });
+    snippet = buildSnippet(name);
+    if (pgCode) pgCode.textContent = snippet;
+    if (animate && !reduceMotion) {
+      cards.forEach((card) => {
+        const faceEl = card.querySelector('.variant-face');
+        faceEl.classList.remove('is-swapping');
+        void faceEl.offsetWidth;
+        faceEl.classList.add('is-swapping');
+      });
+      window.setTimeout(() => {
+        cards.forEach((card) => card.querySelector('.variant-face').classList.remove('is-swapping'));
+      }, 220);
+    }
+  }
+
+  pgName.addEventListener('input', () => renderPlayground(false));
+  pgExpression.addEventListener('change', () => { pg.expression = pgExpression.value; renderPlayground(true); });
+  pgEyewear.addEventListener('change', () => { pg.eyewear = pgEyewear.value; renderPlayground(true); });
+  pgHeadwear.addEventListener('change', () => { pg.headwear = pgHeadwear.value; renderPlayground(true); });
+  pgNeckwear.addEventListener('change', () => { pg.neckwear = pgNeckwear.value; renderPlayground(true); });
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      if (pg.variant === card.dataset.variant) return;
+      pg.variant = card.dataset.variant;
+      renderPlayground(true);
+    });
+  });
+  if (pgCopy) {
+    pgCopy.addEventListener('click', async () => {
+      copyFeedback(pgCopy, await copyText(snippet));
+    });
+  }
+  renderPlayground(false);
+}

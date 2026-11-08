@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Peek · A name in, a face out. In every language.</title>
-  <meta name="description" content="Peek is a deterministic avatar family. One name becomes one face, identical in JavaScript, Kotlin, and Rust. No storage, no network, no accounts.">
+  <meta name="description" content="Peek is a deterministic avatar family. One name becomes one face, identical in JavaScript, Kotlin, and Rust, and every face can be drawn three ways: peek, haze, and bloc. No storage, no network, no accounts.">
   <link rel="canonical" href="https://getpeek.tech/">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#faf8f5">
@@ -12,7 +12,7 @@
   <meta property="og:site_name" content="Peek">
   <meta property="og:url" content="https://getpeek.tech/">
   <meta property="og:title" content="Peek · A name in, a face out. In every language.">
-  <meta property="og:description" content="Deterministic avatars for JavaScript, Kotlin, and Rust. Same name, same face, everywhere.">
+  <meta property="og:description" content="Deterministic avatars for JavaScript, Kotlin, and Rust. Same name, same face, drawn three ways.">
   <meta property="og:image" content="https://getpeek.tech/og.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Peek · A name in, a face out. In every language.">
-  <meta name="twitter:description" content="Deterministic avatars for JavaScript, Kotlin, and Rust. Same name, same face, everywhere.">
+  <meta name="twitter:description" content="Deterministic avatars for JavaScript, Kotlin, and Rust. Same name, same face, drawn three ways.">
   <meta name="twitter:image" content="https://getpeek.tech/og.png">
   <meta name="twitter:image:alt" content="Six Peek avatar faces on a warm paper background with the Peek wordmark">
   <script type="application/ld+json">
@@ -43,7 +43,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <header class="site-header">
@@ -55,6 +55,7 @@
       </a>
       <nav class="site-nav" aria-label="Sections">
         <a href="#family">Family</a>
+        <a href="#playground">Playground</a>
         <a href="#determinism">Determinism</a>
         <a href="#code">Code</a>
         <a href="#credit">Credit</a>
@@ -70,18 +71,18 @@
     <section class="hero">
       <div class="wrap hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">The deterministic avatar family</p>
-          <h1>A name in, a face out.<br>In every language.</h1>
-          <p class="lede">Peek turns any name into an avatar. Nothing is stored, nothing is fetched, so the face is the same one every time, everywhere. These are independent ports of the original Peek, bringing identical faces to JavaScript, Kotlin, and Rust.</p>
+          <p class="eyebrow">Deterministic avatars for JavaScript, Kotlin, and Rust</p>
+          <h1>A name in, a face out.<br>Three styles, every language.</h1>
+          <p class="lede">Peek turns any name into an avatar, computed from the name itself. Nothing is stored and nothing is fetched, so the face is the same one every time, everywhere. New in 2.0.0: every face can be drawn three ways, peek, haze, or bloc, and dressed with glasses, a bow, a cap, a sprout, or a tie.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#family">Meet the family</a>
+            <a class="btn btn-primary" href="#playground">Try the playground</a>
             <a class="btn btn-ghost" href="https://github.com/Sakayorii/peek-vanilla" target="_blank" rel="noopener">Source on GitHub</a>
           </div>
           <dl class="hero-stats">
             <div><dt>3</dt><dd>runtimes</dd></div>
+            <div><dt>3</dt><dd>drawing styles</dd></div>
+            <div><dt>667</dt><dd>golden vectors</dd></div>
             <div><dt>0</dt><dd>dependencies</dd></div>
-            <div><dt>445</dt><dd>golden vectors</dd></div>
-            <div><dt>1</dt><dd>face per name</dd></div>
           </dl>
         </div>
         <div class="hero-faces" id="hero-faces" aria-label="Sample Peek faces"></div>
@@ -92,17 +93,17 @@
       <div class="wrap">
         <p class="section-no">01</p>
         <h2>One family, three runtimes</h2>
-        <p class="section-lede">Pick the language you ship in. The faces stay the same.</p>
+        <p class="section-lede">Pick the language you ship in. The faces stay the same, and every port is now at version 2.0.0, matching the original Peek 2.0.0 from Doan Labs.</p>
         <div class="cards">
           <article class="card">
             <div class="card-top">
               <h3>peek-vanilla</h3>
               <span class="tag">JavaScript</span>
             </div>
-            <p>The reference port. Zero dependencies, no React, no build step. Static SVG strings, or mount a face with the full live animation rig: springs, blinks, saccades, gaze.</p>
+            <p>The reference port. Zero dependencies, no React, no build step. Static SVG strings, or mount a face with the full live animation rig: springs, blinks, saccades, gaze. Now with all three drawing styles and the full wardrobe.</p>
             <div class="install">
-              <code>npm i @sakayori/peek-vanilla</code>
-              <button class="copy" data-copy="npm i @sakayori/peek-vanilla" aria-label="Copy install command">Copy</button>
+              <code>npm i @sakayori/peek-vanilla@2.0.0</code>
+              <button class="copy" data-copy="npm i @sakayori/peek-vanilla@2.0.0" aria-label="Copy install command">Copy</button>
             </div>
             <a class="card-link" href="https://github.com/Sakayorii/peek-vanilla" target="_blank" rel="noopener">Sakayorii/peek-vanilla</a>
           </article>
@@ -111,10 +112,10 @@
               <h3>peek-kotlin</h3>
               <span class="tag">Kotlin</span>
             </div>
-            <p>For the JVM and Android. Drop it into Jetpack Compose, or render SVG strings on a server. Verified byte-identical to the reference across 445 golden vectors.</p>
+            <p>For the JVM and Android. Drop it into Jetpack Compose, or render SVG strings on a server. Verified byte-identical to the reference across 667 golden vectors, styles and outfits included.</p>
             <div class="install">
-              <code>com.github.Sakayorii:peek-kotlin:v1.0.1</code>
-              <button class="copy" data-copy="implementation(&quot;com.github.Sakayorii:peek-kotlin:v1.0.1&quot;)" aria-label="Copy install command">Copy</button>
+              <code>com.github.Sakayorii:peek-kotlin:v2.0.0</code>
+              <button class="copy" data-copy="implementation(&quot;com.github.Sakayorii:peek-kotlin:v2.0.0&quot;)" aria-label="Copy install command">Copy</button>
             </div>
             <a class="card-link" href="https://github.com/Sakayorii/peek-kotlin" target="_blank" rel="noopener">Sakayorii/peek-kotlin</a>
           </article>
@@ -123,10 +124,10 @@
               <h3>peek-rust</h3>
               <span class="tag">Rust</span>
             </div>
-            <p>For CLIs, servers, and WASM. Same hash, same seed, same drawing code, compiled down to nothing. One deliberate difference: lone surrogates become U+FFFD, per TextEncoder semantics.</p>
+            <p>For CLIs, servers, and WASM. Same hash, same seed, same drawing code, compiled down to nothing. Crate version 2.0.0, taken straight from the v2.0.0 tag. One deliberate difference: lone surrogates become U+FFFD, per TextEncoder semantics.</p>
             <div class="install">
-              <code>sakayori-peek = { git = ".../peek-rust" }</code>
-              <button class="copy" data-copy="sakayori-peek = { git = &quot;https://github.com/Sakayorii/peek-rust&quot; }" aria-label="Copy install command">Copy</button>
+              <code>sakayori-peek = { git = ".../peek-rust", tag = "v2.0.0" }</code>
+              <button class="copy" data-copy="sakayori-peek = { git = &quot;https://github.com/Sakayorii/peek-rust&quot;, tag = &quot;v2.0.0&quot; }" aria-label="Copy install command">Copy</button>
             </div>
             <a class="card-link" href="https://github.com/Sakayorii/peek-rust" target="_blank" rel="noopener">Sakayorii/peek-rust</a>
           </article>
@@ -134,28 +135,81 @@
       </div>
     </section>
 
-    <section class="section section-wash" id="determinism">
+    <section class="section section-wash" id="playground">
       <div class="wrap">
         <p class="section-no">02</p>
+        <h2>One face, three ways to draw it</h2>
+        <p class="section-lede">Type a name, pick an expression and an outfit, and see the same identity drawn as peek, haze, and bloc. A style never changes who the face is. Every face below is rendered live by the JavaScript port running on this page.</p>
+        <div class="controls">
+          <label class="control control-name">
+            <span class="control-label">Name</span>
+            <input id="pg-name" type="text" value="Sakayori" autocomplete="off" spellcheck="false" maxlength="40">
+          </label>
+          <label class="control">
+            <span class="control-label">Expression</span>
+            <select id="pg-expression"></select>
+          </label>
+          <label class="control">
+            <span class="control-label">Eyewear</span>
+            <select id="pg-eyewear"></select>
+          </label>
+          <label class="control">
+            <span class="control-label">Headwear</span>
+            <select id="pg-headwear"></select>
+          </label>
+          <label class="control">
+            <span class="control-label">Neckwear</span>
+            <select id="pg-neckwear"></select>
+          </label>
+        </div>
+        <div class="variant-row" role="group" aria-label="Drawing styles">
+          <button type="button" class="variant-card is-featured" data-variant="peek" aria-pressed="true">
+            <span class="variant-face" data-variant-face="peek"></span>
+            <span class="variant-name">peek</span>
+            <span class="variant-desc">The original drawing</span>
+          </button>
+          <button type="button" class="variant-card" data-variant="haze" aria-pressed="false">
+            <span class="variant-face" data-variant-face="haze"></span>
+            <span class="variant-name">haze</span>
+            <span class="variant-desc">The body in soft color</span>
+          </button>
+          <button type="button" class="variant-card" data-variant="bloc" aria-pressed="false">
+            <span class="variant-face" data-variant-face="bloc"></span>
+            <span class="variant-name">bloc</span>
+            <span class="variant-desc">Flat geometry, two tones, one bar</span>
+          </button>
+        </div>
+        <p class="playground-note">Select a card to feature that style. The call that draws the featured face is:</p>
+        <div class="install snippet">
+          <code id="pg-code"></code>
+          <button class="copy" id="pg-copy" aria-label="Copy the playground code">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="determinism">
+      <div class="wrap">
+        <p class="section-no">03</p>
         <h2>Same name. Same face. Everywhere.</h2>
         <p class="section-lede">Each face is computed from the name with FNV-1a and mulberry32. There is no database and no network call, so identity is portable by construction.</p>
         <div class="determinism-grid">
           <div class="same-faces" id="same-faces" aria-label="One face per runtime name"></div>
           <ul class="proof-list">
-            <li><strong>445 golden vectors.</strong> Curated names with unicode, emoji, and whitespace edge cases, every expression, every part override. One byte off fails.</li>
+            <li><strong>667 golden vectors.</strong> Curated names with unicode, emoji, and whitespace edge cases, every expression, every part override, every accessory slot and combination, and all three drawing styles. One byte off fails.</li>
+            <li><strong>20,160 distinct faces.</strong> Four face shapes, seven colors, three eyes, four brows, four mouths, three cheeks, and five traits combine into 20,160 identities, before expressions, outfits, and styles multiply them further.</li>
             <li><strong>1,800 animation poses.</strong> The Kotlin-side animation rig was stepped pose-for-pose against the JavaScript harness. Worst drift: 1.4e-15.</li>
             <li><strong>Zero dependencies.</strong> Every port ships with no runtime dependencies, in every language.</li>
           </ul>
         </div>
-        <p class="fine-print">Each face above is rendered live from its language name. Same name in, same face out, in every runtime. The Kotlin and Rust ports produce byte-identical SVG for the same input, checked by 445 golden vectors.</p>
+        <p class="fine-print">Each face above is rendered live from its language name. Same name in, same face out, in every runtime. The Kotlin and Rust ports produce byte-identical SVG for the same input, checked by 667 golden vectors.</p>
       </div>
     </section>
 
     <section class="section" id="code">
       <div class="wrap">
-        <p class="section-no">03</p>
+        <p class="section-no">04</p>
         <h2>Three calls, one face</h2>
-        <p class="section-lede">A string in, a face out. The shape of the call barely changes between languages.</p>
+        <p class="section-lede">A string in, a face out. The shape of the call barely changes between languages, and the style and outfit options travel with it.</p>
         <div class="tabs" role="tablist" aria-label="Language examples">
           <span class="tab-indicator" aria-hidden="true"></span>
           <button class="tab is-active" role="tab" aria-selected="true" data-tab="js">JavaScript</button>
@@ -174,6 +228,10 @@
 <span class="c">// a string of SVG, anywhere JavaScript runs</span>
 <span class="k">const</span> svg = <span class="f">toSvg</span>(<span class="s">'Sakayori'</span>);
 
+<span class="c">// dress it up, or draw it another way</span>
+<span class="k">const</span> dressed = <span class="f">toSvg</span>(<span class="s">'Sakayori'</span>, { eyewear: <span class="s">'glasses'</span>, headwear: <span class="s">'sprout'</span> });
+<span class="k">const</span> bloc = <span class="f">toSvg</span>(<span class="s">'Sakayori'</span>, { variant: <span class="s">'bloc'</span> });
+
 <span class="c">// or a live face, animated, in the DOM</span>
 <span class="f">mount</span>(<span class="s">'Sakayori'</span>, <span class="s">'#avatar'</span>, { animate: <span class="k">true</span> });</code></pre>
           </div>
@@ -183,12 +241,12 @@
               <button class="copy copy-light" data-codecopy>Copy</button>
             </div>
             <pre><code><span class="c">// repositories { maven("https://jitpack.io") }</span>
-<span class="c">// implementation("com.github.Sakayorii:peek-kotlin:v1.0.1")</span>
+<span class="c">// implementation("com.github.Sakayorii:peek-kotlin:v2.0.0")</span>
 
 <span class="k">val</span> svg: String = <span class="f">toSvg</span>(<span class="s">"Sakayori"</span>)
-<span class="k">val</span> happy: String = <span class="f">toSvg</span>(
+<span class="k">val</span> dressed: String = <span class="f">toSvg</span>(
   <span class="s">"Sakayori"</span>,
-  PeekOptions(expression = <span class="s">"happy"</span>)
+  PeekOptions(eyewear = <span class="s">"glasses"</span>, variant = <span class="s">"haze"</span>)
 )</code></pre>
           </div>
           <div class="panel" data-panel="rs" role="tabpanel">
@@ -196,11 +254,15 @@
               <a class="panel-repo" href="https://github.com/Sakayorii/peek-rust" target="_blank" rel="noopener">Sakayorii/peek-rust</a>
               <button class="copy copy-light" data-codecopy>Copy</button>
             </div>
-            <pre><code><span class="c"># sakayori-peek = { git = "https://github.com/Sakayorii/peek-rust" }</span>
+            <pre><code><span class="c"># sakayori-peek = { git = "https://github.com/Sakayorii/peek-rust", tag = "v2.0.0" }</span>
 
 <span class="k">use</span> sakayori_peek::{to_svg, PeekOptions};
 
-<span class="k">let</span> svg = <span class="f">to_svg</span>(<span class="s">"Sakayori"</span>, &PeekOptions::default());</code></pre>
+<span class="k">let</span> svg = <span class="f">to_svg</span>(<span class="s">"Sakayori"</span>, &amp;PeekOptions::default());
+<span class="k">let</span> haze = <span class="f">to_svg</span>(<span class="s">"Sakayori"</span>, &amp;PeekOptions {
+    variant: <span class="f">Some</span>(<span class="s">"haze"</span>.to_string()),
+    ..PeekOptions::default()
+});</code></pre>
           </div>
           </div>
         </div>
@@ -211,7 +273,7 @@
       <div class="wrap credit-inner">
         <p class="section-no">Credit</p>
         <h2>Peek began at Doan Labs.</h2>
-        <p>The original Peek, the algorithm, the drawing code, and the design belong to <a href="https://peek.doan-labs.com/" target="_blank" rel="noopener">Doan Labs</a>. This family ports their work to new languages with the same care, keeping the MIT license intact. Thank you for making something worth porting.</p>
+        <p>The original Peek, the algorithm, the drawing code, and the design belong to <a href="https://peek.doan-labs.com/" target="_blank" rel="noopener">Doan Labs</a>. This family ports their work to new languages with the same care, keeping the MIT license intact, and now tracks the original at version 2.0.0. Thank you for making something worth porting.</p>
         <a class="btn btn-ghost" href="https://peek.doan-labs.com/" target="_blank" rel="noopener">Visit the original</a>
       </div>
     </section>
@@ -228,6 +290,6 @@
     </div>
   </footer>
 
-  <script type="module" src="app.js?v=8"></script>
+  <script type="module" src="app.js?v=9"></script>
 </body>
 </html>

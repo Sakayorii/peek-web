@@ -7,7 +7,7 @@
  * The persona (continuous proportions and habits) is transcribed from
  * faceFor() in the v1.2 page: same ranges, same draw order.
  */
-import { COLORS, FACES, LATEST, PARTS, VERSIONS, } from './tables.js';
+import { ACCESSORIES, COLORS, FACES, LATEST, PARTS, VERSIONS, } from './tables.js';
 export const STYLE = 'peek';
 export const tidy = (s) => s.normalize('NFC').trim().replace(/\s+/g, ' ').toLowerCase();
 /** FNV-1a over the UTF-8 bytes. */
@@ -32,6 +32,7 @@ export const LISTS = {
     face: Object.keys(FACES),
     color: Object.keys(COLORS),
     ...PARTS,
+    ...ACCESSORIES,
 };
 /** The axes in readout order. */
 export const AXES = Object.keys(LISTS);
@@ -77,6 +78,9 @@ export function identify(name, { version = LATEST } = {}) {
         mouth: pick('mouth'),
         cheeks: pick('cheeks'),
         trait: pick('trait'),
+        eyewear: pick('eyewear'),
+        headwear: pick('headwear'),
+        neckwear: pick('neckwear'),
         persona,
     };
 }
