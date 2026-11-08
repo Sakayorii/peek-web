@@ -1,4 +1,4 @@
-import { toSvg, mount, EXPRESSIONS, ACCESSORIES, VARIANTS } from './vendor/peek-vanilla/index.js';
+import { toSvg, mount, EXPRESSIONS, ACCESSORIES, VARIANTS } from './vendor/peek-vanilla-2.0.0/index.js';
 
 function face(name, size) {
   return toSvg(name, { size: size || 256, frame: 'paper' });
@@ -12,7 +12,7 @@ function caption(fig, text) {
 
 /* brand mark: static */
 const brand = document.getElementById('brand-face');
-if (brand) brand.innerHTML = face('Peek', 96);
+if (brand) brand.innerHTML = toSvg('Peek', { size: 96, frame: 'none' });
 
 /* hero: live faces that watch the pointer */
 const hero = document.getElementById('hero-faces');
